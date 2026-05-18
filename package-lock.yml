@@ -1,0 +1,20 @@
+packages:
+  - name: dbt_utils
+    package: dbt-labs/dbt_utils
+    version: 1.3.3
+  - name: codegen
+    package: dbt-labs/codegen
+    version: 0.14.1
+  - name: dbt_expectations
+    package: metaplane/dbt_expectations
+    version: 0.10.10
+  - name: elementary
+    package: elementary-data/elementary
+    version: 0.23.1
+  - name: dbt_project_evaluator
+    package: dbt-labs/dbt_project_evaluator
+    version: 0.14.3
+  - name: dbt_date
+    package: godatadriven/dbt_date
+    version: 0.18.0
+sha1_hash: a9228fdbcd18dbfc5104cf60de75a52626819fb4
