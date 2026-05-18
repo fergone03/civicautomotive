@@ -1,0 +1,45 @@
+version: 2
+
+seeds:
+  - name: concesionarios
+    description: "Tabla de referencia de concesionarios Civicautomotive con jerarquía geográfica completa. Enriquece los datos de ubicación del CSV original que solo contenía coordenadas y dirección postal."
+    config:
+      column_types:
+        concesionario: VARCHAR
+        calle: VARCHAR
+        codigo_postal: VARCHAR
+        ciudad: VARCHAR
+        region: VARCHAR
+        pais: VARCHAR
+        latitud: DECIMAL(8,4)
+        longitud: DECIMAL(8,5)
+
+    columns:
+      - name: concesionario
+        description: "Nombre completo del concesionario. Clave de join con COCHES_RAW."
+        tests:
+          - unique
+          - not_null
+
+      - name: ciudad
+        description: "Ciudad donde está ubicado el concesionario."
+        tests:
+          - not_null
+
+      - name: region
+        description: "Comunidad autónoma del concesionario."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Andalucía', 'Aragón', 'Cataluña', 'Castilla-La Mancha', 'Castilla y León', 'Madrid', 'Murcia', 'Valencia']
+
+      - name: pais
+        description: "País del concesionario."
+        tests:
+          - not_null
+
+      - name: latitud
+        description: "Coordenada de latitud del concesionario."
+
+      - name: longitud
+        description: "Coordenada de longitud del concesionario."
