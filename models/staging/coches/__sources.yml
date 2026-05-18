@@ -1,0 +1,173 @@
+# yaml-language-server: $schema=
+version: 2
+
+sources:
+  - name: coches
+    description: "Fuente de datos Bronze con el CSV plano de vehículos ingresado en Snowflake. Contiene toda la información desnormalizada de vehículos, concesionarios y ventas."
+    database: DEV_BRONZE_DB
+    schema: PUBLIC
+
+    tables:
+      - name: COCHES_RAW
+        description: "Tabla raw con una fila por vehículo vendido. Origen: CSV cargado manualmente. Contiene atributos del vehículo, ubicación del concesionario y datos de la transacción."
+
+        columns:
+          - name: ID
+            data_type: number
+            description: "Identificador único de cada registro del CSV."
+            tests:
+              - unique
+              - not_null
+
+          - name: ANIO
+            data_type: number
+            description: "Año de fabricación del vehículo. Admite nulos."
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 1990
+                  max_value: 2030
+                  where: "ANIO is not null"
+
+          - name: MARCA
+            data_type: varchar
+            description: "Marca del fabricante del vehículo. Admite nulos."
+
+          - name: MODELO
+            data_type: varchar
+            description: "Nombre del modelo del vehículo. Admite nulos."
+
+          - name: ESTADO
+            data_type: varchar
+            description: "Estado físico del vehículo. Admite nulos. Valores esperados: excellent, fair, good, like new, new, salvage."
+            tests:
+              - accepted_values:
+                  values: ['excellent', 'fair', 'good', 'like new', 'new', 'salvage']
+                  where: "ESTADO is not null"
+
+          - name: MOTOR
+            data_type: varchar
+            description: "Descripción del motor. Admite nulos."
+
+          - name: COMBUSTIBLE
+            data_type: varchar
+            description: "Tipo de combustible. Admite nulos."
+            tests:
+              - accepted_values:
+                  values: ['diesel', 'electric', 'gas', 'hybrid', 'other']
+                  where: "COMBUSTIBLE is not null"
+
+          - name: KILOMETRAJE
+            data_type: number
+            description: "Kilómetros recorridos. Admite nulos."
+            tests:
+              - positive_values
+
+          - name: ESTADO_DOCUMENTACION
+            data_type: varchar
+            description: "Estado legal de la documentación. Admite nulos."
+            tests:
+              - accepted_values:
+                  values: ['clean', 'lien', 'missing', 'parts only', 'rebuilt', 'salvage']
+                  where: "ESTADO_DOCUMENTACION is not null"
+
+          - name: TRANSMISION
+            data_type: varchar
+            description: "Tipo de transmisión. Admite nulos."
+            tests:
+              - accepted_values:
+                  values: ['automatic', 'manual', 'other']
+                  where: "TRANSMISION is not null"
+
+          - name: VIN
+            data_type: varchar
+            description: "Vehicle Identification Number — identificador único universal del vehículo. Admite nulos."
+            tests:
+              - unique:
+                  where: "VIN is not null"
+              - dbt_expectations.expect_column_value_lengths_to_equal:
+                  value: 17
+                  where: "VIN is not null"
+
+          - name: TRACCION
+            data_type: varchar
+            description: "Sistema de tracción. Admite nulos."
+            tests:
+              - accepted_values:
+                  values: ['4wd', 'fwd', 'rwd']
+                  where: "TRACCION is not null"
+
+          - name: TAMANO
+            data_type: varchar
+            description: "Clasificación de tamaño del vehículo. Admite nulos."
+            tests:
+              - accepted_values:
+                  values: ['compact', 'full-size', 'mid-size', 'sub-compact']
+                  where: "TAMANO is not null"
+
+          - name: TIPO_VEHICULO
+            data_type: varchar
+            description: "Categoría de carrocería. Admite nulos."
+            tests:
+              - accepted_values:
+                  values: ['SUV', 'bus', 'convertible', 'coupe', 'hatchback', 'mini-van', 'offroad', 'other', 'pickup', 'sedan', 'truck', 'van', 'wagon']
+                  where: "TIPO_VEHICULO is not null"
+
+          - name: COLOR
+            data_type: varchar
+            description: "Color exterior del vehículo. Admite nulos."
+
+          - name: FECHA_VENTA
+            data_type: date
+            description: "Fecha de venta del vehículo. Admite nulos."
+
+          - name: FECHA_COMPRA
+            data_type: date
+            description: "Fecha de adquisición por el concesionario. Admite nulos."
+
+          - name: CONCESIONARIO
+            data_type: varchar
+            description: "Nombre del concesionario que realizó la venta."
+            tests:
+              - not_null
+
+          - name: CALLE
+            data_type: varchar
+            description: "Dirección postal del concesionario. Admite nulos."
+
+          - name: CODIGO_POSTAL
+            data_type: varchar
+            description: "Código postal del concesionario. Admite nulos."
+
+          - name: LATITUD
+            data_type: number
+            description: "Coordenada de latitud del concesionario. Admite nulos."
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -90
+                  max_value: 90
+                  where: "LATITUD is not null"
+
+          - name: LONGITUD
+            data_type: number
+            description: "Coordenada de longitud del concesionario. Admite nulos."
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -180
+                  max_value: 180
+                  where: "LONGITUD is not null"
+
+          - name: PRECIO_VENTA
+            data_type: varchar
+            description: "Precio de venta al cliente. Llega como varchar — puede contener símbolos de moneda, comas como separador decimal o valores negativos. Se limpia en staging."
+            tests:
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "^[0-9]+([.][0-9]+)?$"
+                  where: "PRECIO_VENTA is not null"
+
+          - name: PRECIO_COMPRA
+            data_type: varchar
+            description: "Precio de adquisición. Llega como varchar — puede contener símbolos de moneda, comas como separador decimal o valores negativos. Se limpia en staging."
+            tests:
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "^[0-9]+([.][0-9]+)?$"
+                  where: "PRECIO_COMPRA is not null"
