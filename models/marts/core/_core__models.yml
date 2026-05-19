@@ -196,12 +196,12 @@ models:
 
       - name: vehiculo_sk
         data_type: varchar
-        description: "FK a dim_vehiculo."
+        description: "FK a dim_vehiculo. Nulo si la venta era de un vehículo con VIN inválido en Bronze."
         tests:
-          - not_null
           - relationships:
               to: ref('dim_vehiculo')
               field: vehiculo_sk
+              where: "vehiculo_sk is not null"
 
       - name: concesionario_sk
         data_type: varchar

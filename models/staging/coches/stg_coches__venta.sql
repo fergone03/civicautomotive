@@ -13,7 +13,7 @@ with source as (
 final as (
     select
         {{ dbt_utils.generate_surrogate_key(['ID']) }}              as venta_id,
-        {{ dbt_utils.generate_surrogate_key(['VIN']) }}             as vehiculo_id,
+        case when VIN is null then null else {{ dbt_utils.generate_surrogate_key(['VIN']) }} end as vehiculo_id,
         {{ dbt_utils.generate_surrogate_key(['CONCESIONARIO']) }}   as concesionario_id,
         FECHA_COMPRA                                                  as fecha_compra,
         FECHA_VENTA                                                   as fecha_venta,
