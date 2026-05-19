@@ -1,0 +1,2 @@
+fct_name,model_name,reason
+fct_sources_without_freshness,coches.COCHES_RAW,CSV estático sin actualizaciones periódicas. Freshness no aplica.

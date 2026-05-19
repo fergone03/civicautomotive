@@ -46,5 +46,9 @@ snapshots:
 
 tests:
   +severity: error
-  +store_failures: true         
+  +store_failures: true
   +store_failures_as: view
+
+vars:
+  dbt_project_evaluator:
+    models_to_exclude: ['other']
