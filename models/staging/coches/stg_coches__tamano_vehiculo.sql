@@ -1,14 +1,14 @@
-﻿with base as (
-    select distinct tamano
-    from {{ ref('int_coches__base') }}
-    where tamano is not null
+with source as (
+    select distinct TAMANO as nombre
+    from {{ source('coches', 'COCHES_RAW') }}
+    where TAMANO is not null
 ),
 
 final as (
     select
-        {{ dbt_utils.generate_surrogate_key(['tamano']) }} as tamano_id,
-        tamano as nombre
-    from base
+        {{ dbt_utils.generate_surrogate_key(['nombre']) }} as tamano_id,
+        nombre
+    from source
 )
 
 select * from final

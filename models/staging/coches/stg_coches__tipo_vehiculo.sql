@@ -1,14 +1,14 @@
-﻿with base as (
-    select distinct tipo_vehiculo
-    from {{ ref('int_coches__base') }}
-    where tipo_vehiculo is not null
+with source as (
+    select distinct TIPO_VEHICULO as nombre
+    from {{ source('coches', 'COCHES_RAW') }}
+    where TIPO_VEHICULO is not null
 ),
 
 final as (
     select
-        {{ dbt_utils.generate_surrogate_key(['tipo_vehiculo']) }} as tipo_vehiculo_id,
-        tipo_vehiculo as nombre
-    from base
+        {{ dbt_utils.generate_surrogate_key(['nombre']) }} as tipo_vehiculo_id,
+        nombre
+    from source
 )
 
 select * from final

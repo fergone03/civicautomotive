@@ -1,22 +1,15 @@
-﻿with base as (
-    select distinct concesionario
-    from {{ ref('int_coches__base') }}
-    where concesionario is not null
-),
-
-seed as (
-    select *
-    from {{ ref('concesionarios') }}
+with base as (
+    select distinct CONCESIONARIO as concesionario
+    from {{ source('coches', 'COCHES_RAW') }}
+    where CONCESIONARIO is not null
 ),
 
 final as (
     select
-        {{ dbt_utils.generate_surrogate_key(['base.concesionario']) }}  as concesionario_id,
-        base.concesionario                                               as nombre,
-        {{ dbt_utils.generate_surrogate_key(['seed.concesionario']) }}  as direccion_id
+        {{ dbt_utils.generate_surrogate_key(['concesionario']) }} as concesionario_id,
+        concesionario                                              as nombre,
+        {{ dbt_utils.generate_surrogate_key(['concesionario']) }} as direccion_id
     from base
-    left join seed
-        on base.concesionario = seed.concesionario
 )
 
 select * from final

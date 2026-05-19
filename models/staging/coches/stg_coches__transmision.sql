@@ -1,14 +1,14 @@
-﻿with base as (
-    select distinct transmision
-    from {{ ref('int_coches__base') }}
-    where transmision is not null
+with source as (
+    select distinct TRANSMISION as nombre
+    from {{ source('coches', 'COCHES_RAW') }}
+    where TRANSMISION is not null
 ),
 
 final as (
     select
-        {{ dbt_utils.generate_surrogate_key(['transmision']) }} as transmision_id,
-        transmision as nombre
-    from base
+        {{ dbt_utils.generate_surrogate_key(['nombre']) }} as transmision_id,
+        nombre
+    from source
 )
 
 select * from final
