@@ -12,7 +12,7 @@ with base as (
 
 final as (
     select
-        {{ dbt_utils.generate_surrogate_key(['id_raw']) }}              as venta_id,
+        {{ dbt_utils.generate_surrogate_key(['ID_RAW']) }} as venta_id,
         {{ dbt_utils.generate_surrogate_key(['vin']) }}                 as vehiculo_id,
         {{ dbt_utils.generate_surrogate_key(['concesionario']) }}       as concesionario_id,
         fecha_compra,
