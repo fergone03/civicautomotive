@@ -43,3 +43,4 @@ seeds:
 
       - name: longitud
         description: "Coordenada de longitud del concesionario."
+

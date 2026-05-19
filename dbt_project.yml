@@ -48,7 +48,3 @@ tests:
   +severity: error
   +store_failures: true
   +store_failures_as: view
-
-vars:
-  dbt_project_evaluator:
-    disabled_packages: ['elementary']

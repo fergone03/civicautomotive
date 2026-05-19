@@ -150,7 +150,7 @@ models:
     columns:
       - name: modelo_id
         data_type: varchar
-        description: "Surrogate key MD5 generada a partir de modelo y marca."
+        description: "Surrogate key MD5 generada a partir de modelo, marca, tipo_vehiculo y tamano."
         tests:
           - unique
           - not_null
@@ -341,7 +341,7 @@ models:
 
       - name: modelo_id
         data_type: varchar
-        description: "FK a stg_coches__modelo."
+        description: "FK a stg_coches__modelo. Nulo si el vehículo no tiene modelo o marca registrados."
         tests:
           - relationships:
               to: ref('stg_coches__modelo')
@@ -350,7 +350,7 @@ models:
 
       - name: motor_id
         data_type: varchar
-        description: "FK a stg_coches__motor."
+        description: "FK a stg_coches__motor. Nulo si el vehículo no tiene motor o combustible registrados."
         tests:
           - relationships:
               to: ref('stg_coches__motor')
@@ -359,7 +359,7 @@ models:
 
       - name: transmision_id
         data_type: varchar
-        description: "FK a stg_coches__transmision."
+        description: "FK a stg_coches__transmision. Nulo si no está registrada."
         tests:
           - relationships:
               to: ref('stg_coches__transmision')
@@ -368,7 +368,7 @@ models:
 
       - name: traccion_id
         data_type: varchar
-        description: "FK a stg_coches__traccion."
+        description: "FK a stg_coches__traccion. Nulo si no está registrada."
         tests:
           - relationships:
               to: ref('stg_coches__traccion')
@@ -377,7 +377,7 @@ models:
 
       - name: color_id
         data_type: varchar
-        description: "FK a stg_coches__color."
+        description: "FK a stg_coches__color. Nulo si no está registrado."
         tests:
           - relationships:
               to: ref('stg_coches__color')
@@ -402,9 +402,8 @@ models:
 
       - name: vehiculo_id
         data_type: varchar
-        description: "FK a stg_coches__vehiculo."
+        description: "FK a stg_coches__vehiculo. Nulo si el VIN era inválido."
         tests:
-          - not_null
           - relationships:
               to: ref('stg_coches__vehiculo')
               field: vehiculo_id
