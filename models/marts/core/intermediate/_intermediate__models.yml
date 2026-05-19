@@ -1,0 +1,109 @@
+version: 2
+
+models:
+  - name: int_vehiculo__completo
+    description: "Modelo intermedio que consolida toda la información del vehículo en una sola fila mediante joins entre las tablas normalizadas de staging. Sirve de base para dim_vehiculo."
+    columns:
+      - name: vehiculo_id
+        data_type: varchar
+        description: "Surrogate key del vehículo. PK de este modelo."
+        tests:
+          - unique
+          - not_null
+
+      - name: vin
+        data_type: varchar
+        description: "Vehicle Identification Number."
+        tests:
+          - unique
+          - not_null
+
+      - name: anio
+        data_type: number
+        description: "Año de fabricación del vehículo."
+
+      - name: kilometraje
+        data_type: number
+        description: "Kilómetros recorridos."
+        tests:
+          - positive_values
+
+      - name: marca
+        data_type: varchar
+        description: "Nombre de la marca del vehículo."
+
+      - name: modelo
+        data_type: varchar
+        description: "Nombre del modelo del vehículo."
+
+      - name: tipo_vehiculo
+        data_type: varchar
+        description: "Categoría de carrocería."
+
+      - name: tamano
+        data_type: varchar
+        description: "Clasificación de tamaño."
+
+      - name: motor
+        data_type: varchar
+        description: "Descripción del motor."
+
+      - name: combustible
+        data_type: varchar
+        description: "Tipo de combustible."
+
+      - name: transmision
+        data_type: varchar
+        description: "Tipo de transmisión."
+
+      - name: traccion
+        data_type: varchar
+        description: "Sistema de tracción."
+
+      - name: color
+        data_type: varchar
+        description: "Color exterior del vehículo."
+
+  - name: int_concesionario__completo
+    description: "Modelo intermedio que consolida toda la jerarquía geográfica del concesionario en una sola fila mediante joins entre staging y el seed de concesionarios. Sirve de base para dim_concesionario."
+    columns:
+      - name: concesionario_id
+        data_type: varchar
+        description: "Surrogate key del concesionario. PK de este modelo."
+        tests:
+          - unique
+          - not_null
+
+      - name: concesionario
+        data_type: varchar
+        description: "Nombre completo del concesionario."
+        tests:
+          - not_null
+
+      - name: calle
+        data_type: varchar
+        description: "Dirección postal del concesionario."
+
+      - name: codigo_postal
+        data_type: varchar
+        description: "Código postal del concesionario."
+
+      - name: ciudad
+        data_type: varchar
+        description: "Ciudad donde está ubicado el concesionario."
+
+      - name: region
+        data_type: varchar
+        description: "Comunidad autónoma del concesionario."
+
+      - name: pais
+        data_type: varchar
+        description: "País del concesionario."
+
+      - name: latitud
+        data_type: number
+        description: "Coordenada de latitud."
+
+      - name: longitud
+        data_type: number
+        description: "Coordenada de longitud."

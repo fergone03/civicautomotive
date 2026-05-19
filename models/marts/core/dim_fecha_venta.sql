@@ -1,0 +1,17 @@
+with fechas as (
+    select distinct fecha_venta as fecha
+    from {{ ref('stg_coches__venta') }}
+    where fecha_venta is not null
+),
+
+final as (
+    select
+        cast(to_char(fecha, 'YYYYMMDD') as integer)  as fecha_sk,
+        fecha,
+        year(fecha)                                   as anio,
+        month(fecha)                                  as mes,
+        day(fecha)                                    as dia
+    from fechas
+)
+
+select * from final
