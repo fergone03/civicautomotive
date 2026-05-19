@@ -1,16 +1,16 @@
 with fechas as (
     select distinct fecha_compra as fecha
-    from {{ ref('stg_coches__venta') }}
+    from {{ ref('int_fechas__ventas') }}
     where fecha_compra is not null
 ),
 
 final as (
     select
-        cast(to_char(fecha, 'YYYYMMDD') as integer)  as fecha_sk,
+        cast(to_char(fecha, 'YYYYMMDD') as integer) as fecha_sk,
         fecha,
-        year(fecha)                                   as anio,
-        month(fecha)                                  as mes,
-        day(fecha)                                    as dia
+        year(fecha)  as anio,
+        month(fecha) as mes,
+        day(fecha)   as dia
     from fechas
 )
 

@@ -51,4 +51,4 @@ tests:
 
 vars:
   dbt_project_evaluator:
-    models_to_exclude: ['other']
+    disabled_packages: ['elementary']

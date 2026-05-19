@@ -1,6 +1,17 @@
 version: 2
 
 models:
+  - name: int_fechas__ventas
+    description: "Intermediate que extrae las fechas distintas de venta y compra. Sirve de base para dim_fecha_compra y dim_fecha_venta evitando que ambas dimensiones dependan directamente del staging."
+    columns:
+      - name: fecha_compra
+        data_type: date
+        description: "Fecha de adquisición del vehículo."
+
+      - name: fecha_venta
+        data_type: date
+        description: "Fecha de venta del vehículo."
+
   - name: int_vehiculo__atributos
     description: "Primer intermediate del vehículo. Consolida vehiculo + modelo + marca + tipo + tamaño (5 joins). Sirve de base para int_vehiculo__completo que añade motor, combustible, transmisión, tracción y color."
     columns:
