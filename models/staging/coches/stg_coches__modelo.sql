@@ -1,10 +1,10 @@
-with base as (
+﻿with base as (
     select distinct
         modelo,
         marca,
         tipo_vehiculo,
         tamano
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where modelo is not null
 ),
 

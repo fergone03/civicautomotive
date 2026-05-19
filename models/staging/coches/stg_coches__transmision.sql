@@ -1,6 +1,6 @@
-with base as (
+﻿with base as (
     select distinct transmision
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where transmision is not null
 ),
 

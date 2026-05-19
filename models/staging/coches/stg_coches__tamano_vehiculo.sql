@@ -1,6 +1,6 @@
-with base as (
+﻿with base as (
     select distinct tamano
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where tamano is not null
 ),
 

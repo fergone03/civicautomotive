@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_coches__base
+  - name: int_coches__base
     description: "Modelo base de staging. Lee directamente de COCHES_RAW y aplica la limpieza inicial: casteo de precios de varchar a decimal, eliminando símbolos de moneda, comas y espacios. Es el único modelo que referencia la fuente directamente — el resto de stagings leen de aquí."
     columns:
       - name: id_raw

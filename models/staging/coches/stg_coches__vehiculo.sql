@@ -1,4 +1,4 @@
-with base as (
+﻿with base as (
     select
         vin,
         anio,
@@ -10,7 +10,7 @@ with base as (
         traccion,
         color,
         kilometraje
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where vin is not null
 ),
 

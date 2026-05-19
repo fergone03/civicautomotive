@@ -1,8 +1,8 @@
-with base as (
+﻿with base as (
     select distinct
         motor,
         combustible
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where motor is not null
 ),
 

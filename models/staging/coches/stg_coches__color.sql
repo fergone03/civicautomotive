@@ -1,6 +1,6 @@
-with base as (
+﻿with base as (
     select distinct color
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where color is not null
 ),
 

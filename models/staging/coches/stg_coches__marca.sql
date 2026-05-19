@@ -1,6 +1,6 @@
-with base as (
+﻿with base as (
     select distinct marca
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
     where marca is not null
 ),
 

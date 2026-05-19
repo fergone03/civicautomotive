@@ -1,4 +1,4 @@
-with base as (
+﻿with base as (
     select
         id_raw,
         vin,
@@ -7,7 +7,7 @@ with base as (
         fecha_venta,
         precio_compra,
         precio_venta
-    from {{ ref('stg_coches__base') }}
+    from {{ ref('int_coches__base') }}
 ),
 
 final as (
