@@ -1,0 +1,51 @@
+version: 2
+
+snapshots:
+  - name: coches_snapshot
+    description: "SCD tipo 2 sobre COCHES_RAW. Captura cambios en estado, kilometraje, documentación y precios del vehículo a lo largo del tiempo usando estrategia check. Cada vez que cambia alguna de las columnas vigiladas dbt cierra la fila anterior (dbt_valid_to) y abre una nueva."
+    columns:
+      - name: ID
+        description: "Identificador original del registro en el CSV. Clave natural del snapshot."
+        tests:
+          - not_null
+
+      - name: VIN
+        description: "Vehicle Identification Number."
+        tests:
+          - not_null
+
+      - name: ESTADO
+        description: "Estado físico del vehículo. Columna vigilada por el snapshot."
+
+      - name: KILOMETRAJE
+        description: "Kilómetros recorridos. Columna vigilada por el snapshot."
+
+      - name: ESTADO_DOCUMENTACION
+        description: "Estado legal de la documentación. Columna vigilada por el snapshot."
+
+      - name: PRECIO_VENTA
+        description: "Precio de venta. Columna vigilada por el snapshot."
+
+      - name: PRECIO_COMPRA
+        description: "Precio de compra. Columna vigilada por el snapshot."
+
+      - name: FECHA_COMPRA
+        description: "Fecha de adquisición del vehículo."
+
+      - name: FECHA_VENTA
+        description: "Fecha de venta al cliente."
+
+      - name: CONCESIONARIO
+        description: "Nombre del concesionario."
+
+      - name: dbt_scd_id
+        description: "Identificador único de cada versión del registro generado por dbt."
+
+      - name: dbt_updated_at
+        description: "Timestamp de la última actualización del registro en el snapshot."
+
+      - name: dbt_valid_from
+        description: "Timestamp desde el que esta versión del registro es válida."
+
+      - name: dbt_valid_to
+        description: "Timestamp hasta el que esta versión del registro es válida. Nulo si es la versión actual."
