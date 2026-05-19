@@ -1,21 +1,5 @@
-with vehiculo as (
-    select * from {{ ref('stg_coches__vehiculo') }}
-),
-
-modelo as (
-    select * from {{ ref('stg_coches__modelo') }}
-),
-
-marca as (
-    select * from {{ ref('stg_coches__marca') }}
-),
-
-tipo_vehiculo as (
-    select * from {{ ref('stg_coches__tipo_vehiculo') }}
-),
-
-tamano as (
-    select * from {{ ref('stg_coches__tamano_vehiculo') }}
+with base as (
+    select * from {{ ref('int_vehiculo__atributos') }}
 ),
 
 motor as (
@@ -40,38 +24,30 @@ color as (
 
 final as (
     select
-        vehiculo.vehiculo_id,
-        vehiculo.vin,
-        vehiculo.anio,
-        vehiculo.kilometraje,
-        marca.nombre                as marca,
-        modelo.nombre               as modelo,
-        tipo_vehiculo.nombre        as tipo_vehiculo,
-        tamano.nombre               as tamano,
-        motor.descripcion           as motor,
-        combustible.nombre          as combustible,
-        transmision.nombre          as transmision,
-        traccion.nombre             as traccion,
-        color.nombre                as color
-    from vehiculo
-    left join modelo
-        on vehiculo.modelo_id = modelo.modelo_id
-    left join marca
-        on modelo.marca_id = marca.marca_id
-    left join tipo_vehiculo
-        on modelo.tipo_vehiculo_id = tipo_vehiculo.tipo_vehiculo_id
-    left join tamano
-        on modelo.tamano_id = tamano.tamano_id
+        base.vehiculo_id,
+        base.vin,
+        base.anio,
+        base.kilometraje,
+        base.marca,
+        base.modelo,
+        base.tipo_vehiculo,
+        base.tamano,
+        motor.descripcion  as motor,
+        combustible.nombre as combustible,
+        transmision.nombre as transmision,
+        traccion.nombre    as traccion,
+        color.nombre       as color
+    from base
     left join motor
-        on vehiculo.motor_id = motor.motor_id
+        on base.motor_id = motor.motor_id
     left join combustible
         on motor.combustible_id = combustible.combustible_id
     left join transmision
-        on vehiculo.transmision_id = transmision.transmision_id
+        on base.transmision_id = transmision.transmision_id
     left join traccion
-        on vehiculo.traccion_id = traccion.traccion_id
+        on base.traccion_id = traccion.traccion_id
     left join color
-        on vehiculo.color_id = color.color_id
+        on base.color_id = color.color_id
 )
 
 select * from final
