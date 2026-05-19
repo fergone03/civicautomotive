@@ -1,3 +1,0 @@
-fct_name,model_name,reason
-fct_sources_without_freshness,coches.COCHES_RAW,CSV estático sin actualizaciones periódicas. Freshness no aplica.
-fct_source_fanout,coches.COCHES_RAW,Normalización intencional de un CSV plano en 12 entidades. Patrón de diseño correcto.

@@ -10,9 +10,7 @@ snapshots:
           - not_null
 
       - name: VIN
-        description: "Vehicle Identification Number."
-        tests:
-          - not_null
+        description: "Vehicle Identification Number. Puede ser nulo si el VIN original no tenía 17 caracteres."
 
       - name: ESTADO
         description: "Estado físico del vehículo. Columna vigilada por el snapshot."

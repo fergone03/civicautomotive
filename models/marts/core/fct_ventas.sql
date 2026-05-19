@@ -6,11 +6,18 @@
     )
 }}
 
+{% if is_incremental() %}
+{% set max_fecha_query %}
+    select max(fecha_venta_sk) from {{ this }}
+{% endset %}
+{% set max_fecha = run_query(max_fecha_query).columns[0].values()[0] %}
+{% endif %}
+
 with venta as (
     select * from {{ ref('stg_coches__venta') }}
 
-    {% if is_incremental() %}
-        where fecha_venta > (select max(fecha_venta) from {{ this }})
+    {% if is_incremental() and max_fecha %}
+        where cast(to_char(fecha_venta, 'YYYYMMDD') as integer) > {{ max_fecha }}
     {% endif %}
 ),
 
