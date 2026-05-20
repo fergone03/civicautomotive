@@ -1,0 +1,439 @@
+version: 2
+
+models:
+  - name: stg_coches__marca
+    description: "Catálogo de marcas de vehículos extraído con SELECT DISTINCT de stg_coches__base. PK generada con surrogate key sobre el nombre."
+    columns:
+      - name: marca_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del nombre de la marca."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre de la marca."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__tipo_vehiculo
+    description: "Catálogo de tipos de vehículo extraído con SELECT DISTINCT de stg_coches__base."
+    columns:
+      - name: tipo_vehiculo_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del tipo de vehículo."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre del tipo de vehículo."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__tamano_vehiculo
+    description: "Catálogo de tamaños de vehículo extraído con SELECT DISTINCT de stg_coches__base."
+    columns:
+      - name: tamano_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del tamaño."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Clasificación de tamaño."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__combustible
+    description: "Catálogo de tipos de combustible extraído con SELECT DISTINCT de stg_coches__base."
+    columns:
+      - name: combustible_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del tipo de combustible."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Tipo de combustible."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__transmision
+    description: "Catálogo de tipos de transmisión extraído con SELECT DISTINCT de stg_coches__base."
+    columns:
+      - name: transmision_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del tipo de transmisión."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Tipo de transmisión."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__traccion
+    description: "Catálogo de sistemas de tracción extraído con SELECT DISTINCT de stg_coches__base."
+    columns:
+      - name: traccion_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del sistema de tracción."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Sistema de tracción."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__color
+    description: "Catálogo de colores extraído con SELECT DISTINCT de stg_coches__base."
+    columns:
+      - name: color_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del color."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Color exterior del vehículo."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__motor
+    description: "Catálogo de motores con su FK a combustible. Extraído con SELECT DISTINCT sobre motor y combustible de stg_coches__base."
+    columns:
+      - name: motor_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir de la descripción del motor."
+        tests:
+          - unique
+          - not_null
+
+      - name: descripcion
+        data_type: varchar
+        description: "Descripción del motor."
+        tests:
+          - not_null
+
+      - name: combustible_id
+        data_type: varchar
+        description: "FK a stg_coches__combustible."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__combustible')
+              field: combustible_id
+
+  - name: stg_coches__modelo
+    description: "Catálogo de modelos de vehículo con FKs a marca, tipo de vehículo y tamaño."
+    columns:
+      - name: modelo_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir de modelo, marca, tipo_vehiculo y tamano."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre del modelo."
+        tests:
+          - not_null
+
+      - name: marca_id
+        data_type: varchar
+        description: "FK a stg_coches__marca."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__marca')
+              field: marca_id
+
+      - name: tipo_vehiculo_id
+        data_type: varchar
+        description: "FK a stg_coches__tipo_vehiculo."
+        tests:
+          - relationships:
+              to: ref('stg_coches__tipo_vehiculo')
+              field: tipo_vehiculo_id
+              where: "tipo_vehiculo_id is not null"
+
+      - name: tamano_id
+        data_type: varchar
+        description: "FK a stg_coches__tamano_vehiculo."
+        tests:
+          - relationships:
+              to: ref('stg_coches__tamano_vehiculo')
+              field: tamano_id
+              where: "tamano_id is not null"
+
+  - name: stg_coches__pais
+    description: "Catálogo de países extraído del seed de concesionarios."
+    columns:
+      - name: pais_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del nombre del país."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre del país."
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_coches__region
+    description: "Catálogo de regiones con FK a país. Extraído del seed de concesionarios."
+    columns:
+      - name: region_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del nombre de la región."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre de la región."
+        tests:
+          - unique
+          - not_null
+
+      - name: pais_id
+        data_type: varchar
+        description: "FK a stg_coches__pais."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__pais')
+              field: pais_id
+
+  - name: stg_coches__ciudad
+    description: "Catálogo de ciudades con FK a región. Extraído del seed de concesionarios."
+    columns:
+      - name: ciudad_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del nombre de la ciudad."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre de la ciudad."
+        tests:
+          - unique
+          - not_null
+
+      - name: region_id
+        data_type: varchar
+        description: "FK a stg_coches__region."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__region')
+              field: region_id
+
+  - name: stg_coches__direccion
+    description: "Direcciones postales de los concesionarios con FK a ciudad."
+    columns:
+      - name: direccion_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del nombre del concesionario."
+        tests:
+          - unique
+          - not_null
+
+      - name: calle
+        data_type: varchar
+        description: "Dirección postal."
+
+      - name: codigo_postal
+        data_type: varchar
+        description: "Código postal."
+
+      - name: ciudad_id
+        data_type: varchar
+        description: "FK a stg_coches__ciudad."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__ciudad')
+              field: ciudad_id
+
+      - name: latitud
+        data_type: number
+        description: "Coordenada de latitud."
+
+      - name: longitud
+        data_type: number
+        description: "Coordenada de longitud."
+
+  - name: stg_coches__concesionario
+    description: "Catálogo de concesionarios con FK a dirección."
+    columns:
+      - name: concesionario_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del nombre del concesionario."
+        tests:
+          - unique
+          - not_null
+
+      - name: nombre
+        data_type: varchar
+        description: "Nombre completo del concesionario."
+        tests:
+          - unique
+          - not_null
+
+      - name: direccion_id
+        data_type: varchar
+        description: "FK a stg_coches__direccion."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__direccion')
+              field: direccion_id
+
+  - name: stg_coches__vehiculo
+    description: "Entidad vehículo normalizada con FKs a modelo, motor, transmisión, tracción y color."
+    columns:
+      - name: vehiculo_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del VIN."
+        tests:
+          - unique
+          - not_null
+
+      - name: vin
+        data_type: varchar
+        description: "Vehicle Identification Number."
+        tests:
+          - unique
+          - not_null
+
+      - name: anio
+        data_type: number
+        description: "Año de fabricación."
+
+      - name: modelo_id
+        data_type: varchar
+        description: "FK a stg_coches__modelo. Nulo si el vehículo no tiene modelo o marca registrados."
+        tests:
+          - relationships:
+              to: ref('stg_coches__modelo')
+              field: modelo_id
+              where: "modelo_id is not null"
+
+      - name: motor_id
+        data_type: varchar
+        description: "FK a stg_coches__motor. Nulo si el vehículo no tiene motor o combustible registrados."
+        tests:
+          - relationships:
+              to: ref('stg_coches__motor')
+              field: motor_id
+              where: "motor_id is not null"
+
+      - name: transmision_id
+        data_type: varchar
+        description: "FK a stg_coches__transmision. Nulo si no está registrada."
+        tests:
+          - relationships:
+              to: ref('stg_coches__transmision')
+              field: transmision_id
+              where: "transmision_id is not null"
+
+      - name: traccion_id
+        data_type: varchar
+        description: "FK a stg_coches__traccion. Nulo si no está registrada."
+        tests:
+          - relationships:
+              to: ref('stg_coches__traccion')
+              field: traccion_id
+              where: "traccion_id is not null"
+
+      - name: color_id
+        data_type: varchar
+        description: "FK a stg_coches__color. Nulo si no está registrado."
+        tests:
+          - relationships:
+              to: ref('stg_coches__color')
+              field: color_id
+              where: "color_id is not null"
+
+      - name: kilometraje
+        data_type: number
+        description: "Kilómetros recorridos."
+        tests:
+          - positive_values
+
+  - name: stg_coches__venta
+    description: "Tabla de transacciones de venta con FKs a vehículo y concesionario."
+    columns:
+      - name: venta_id
+        data_type: varchar
+        description: "Surrogate key MD5 generada a partir del id_raw del CSV."
+        tests:
+          - unique
+          - not_null
+
+      - name: vehiculo_id
+        data_type: varchar
+        description: "FK a stg_coches__vehiculo. Nulo si el VIN era inválido."
+        tests:
+          - relationships:
+              to: ref('stg_coches__vehiculo')
+              field: vehiculo_id
+              where: "vehiculo_id is not null"
+
+      - name: concesionario_id
+        data_type: varchar
+        description: "FK a stg_coches__concesionario."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_coches__concesionario')
+              field: concesionario_id
+
+      - name: fecha_compra
+        data_type: date
+        description: "Fecha de adquisición del vehículo."
+
+      - name: fecha_venta
+        data_type: date
+        description: "Fecha de venta al cliente final."
+
+      - name: precio_compra
+        data_type: number
+        description: "Precio de compra en decimal."
+        tests:
+          - positive_values
+
+      - name: precio_venta
+        data_type: number
+        description: "Precio de venta en decimal."
+        tests:
+          - positive_values
