@@ -3,6 +3,7 @@ version: 2
 models:
   - name: dim_vehiculo
     description: "Dimensión de vehículos del star schema. Contiene todos los atributos descriptivos del vehículo desnormalizados. Se alimenta de int_vehiculo__completo."
+
     columns:
       - name: vehiculo_sk
         data_type: varchar
@@ -56,6 +57,7 @@ models:
 
   - name: dim_concesionario
     description: "Dimensión de concesionarios del star schema. Contiene los atributos del concesionario y su jerarquía geográfica completa desnormalizada. Se alimenta de int_concesionario__completo."
+
     columns:
       - name: concesionario_sk
         data_type: varchar
@@ -94,7 +96,15 @@ models:
         description: "Comunidad autónoma."
         tests:
           - accepted_values:
-              values: ['Andalucía', 'Aragón', 'Cataluña', 'Castilla-La Mancha', 'Castilla y León', 'Madrid', 'Murcia', 'Valencia']
+              values:
+                - 'Andalucía'
+                - 'Aragón'
+                - 'Cataluña'
+                - 'Castilla-La Mancha'
+                - 'Castilla y León'
+                - 'Madrid'
+                - 'Murcia'
+                - 'Valencia'
 
       - name: pais
         data_type: varchar
@@ -112,6 +122,7 @@ models:
 
   - name: dim_fecha_compra
     description: "Dimensión de fechas de compra. Contiene una fila por cada fecha de adquisición distinta que existe en fct_ventas."
+
     columns:
       - name: fecha_sk
         data_type: number
@@ -139,7 +150,19 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+              values:
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+                - 6
+                - 7
+                - 8
+                - 9
+                - 10
+                - 11
+                - 12
 
       - name: dia
         data_type: number
@@ -149,6 +172,7 @@ models:
 
   - name: dim_fecha_venta
     description: "Dimensión de fechas de venta. Contiene una fila por cada fecha de venta distinta que existe en fct_ventas."
+
     columns:
       - name: fecha_sk
         data_type: number
@@ -176,7 +200,19 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+              values:
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+                - 6
+                - 7
+                - 8
+                - 9
+                - 10
+                - 11
+                - 12
 
       - name: dia
         data_type: number
@@ -186,6 +222,7 @@ models:
 
   - name: fct_ventas
     description: "Tabla de hechos central del star schema. Contiene una fila por transacción de venta con métricas calculadas (margen, dias_stock) y FKs a las 4 dimensiones. Materializada como incremental con estrategia merge sobre id_venta."
+
     columns:
       - name: id_venta
         data_type: varchar
@@ -251,3 +288,81 @@ models:
         description: "Días transcurridos entre fecha_compra y fecha_venta. Indica el tiempo que el vehículo estuvo en el concesionario."
         tests:
           - positive_values
+
+  - name: fct_rotacion_inventario
+    description: "Tabla de hechos de rotación de inventario. Granularidad: una fila por vehículo vendido. Atiende el análisis operativo (días en stock, rotación)."
+
+    columns:
+      - name: id_venta
+        data_type: varchar
+        description: "PK de la tabla."
+        tests:
+          - unique
+          - not_null
+
+      - name: vehiculo_sk
+        data_type: varchar
+        description: "FK a dim_vehiculo."
+        tests:
+          - relationships:
+              to: ref('dim_vehiculo')
+              field: vehiculo_sk
+              where: "vehiculo_sk is not null"
+
+      - name: concesionario_sk
+        data_type: varchar
+        description: "FK a dim_concesionario."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_concesionario')
+              field: concesionario_sk
+
+      - name: fecha_compra_sk
+        data_type: number
+        description: "FK a dim_fecha_compra."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_fecha_compra')
+              field: fecha_sk
+
+      - name: fecha_venta_sk
+        data_type: number
+        description: "FK a dim_fecha_venta."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_fecha_venta')
+              field: fecha_sk
+
+      - name: dias_stock
+        data_type: number
+        description: "Días entre fecha_compra y fecha_venta."
+        tests:
+          - not_null
+          - positive_values
+
+      - name: categoria_rotacion
+        data_type: varchar
+        description: "Categorización derivada de dias_stock."
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Rápida (<= 30d)'
+                - 'Normal (31-90d)'
+                - 'Lenta (91-180d)'
+                - 'Muy lenta (>180d)'
+
+      - name: precio_compra
+        data_type: number
+        description: "Precio de adquisición."
+
+      - name: precio_venta
+        data_type: number
+        description: "Precio de venta."
+
+      - name: margen
+        data_type: number
+        description: "Diferencia entre precio_venta y precio_compra."
