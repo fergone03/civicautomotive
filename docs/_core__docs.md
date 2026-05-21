@@ -16,6 +16,20 @@ Diferencia entre precio_venta y precio_compra expresada en la misma moneda. Pued
 
 {% docs dias_stock %}
 Número de días transcurridos entre la fecha de adquisición del vehículo por el concesionario (fecha_compra) y la fecha de venta al cliente final (fecha_venta). Indica la rotación del inventario. Un valor negativo indica un error en los datos — documentado en el test singular assert_fecha_venta_mayor_compra.
+
+NULL cuando el coche aún no se ha vendido (fecha_venta IS NULL). Esto refleja la regla semántica del proyecto: un coche con fecha_compra pero sin fecha_venta sigue en inventario en nuestros concesionarios — no es una venta cerrada.
+{% enddocs %}
+
+{% docs estado_venta %}
+Regla semántica del proyecto sobre el ciclo de vida de un vehículo en fct_ventas:
+
+- fecha_compra informada + fecha_venta informada → venta cerrada. Métricas margen y dias_stock calculables.
+- fecha_compra informada + fecha_venta NULL → coche en inventario en nuestros concesionarios. Aún no vendido. Margen y dias_stock son NULL.
+- fecha_compra NULL + fecha_venta informada → error de datos (venta sin compra). Lo detecta assert_fecha_venta_mayor_compra.
+- ambos NULL → registro sin información temporal, fuera de análisis temporal.
+
+Para queries de "ventas reales": WHERE fecha_venta_sk IS NOT NULL.
+Para queries de "stock actual": WHERE fecha_compra_sk IS NOT NULL AND fecha_venta_sk IS NULL.
 {% enddocs %}
 
 {% docs surrogate_key %}

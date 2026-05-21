@@ -221,7 +221,15 @@ models:
           - not_null
 
   - name: fct_ventas
-    description: "Tabla de hechos central del star schema. Contiene una fila por transacción de venta con métricas calculadas (margen, dias_stock) y FKs a las 4 dimensiones. Materializada como incremental con estrategia merge sobre id_venta."
+    description: >
+      Tabla de hechos central del star schema. Contiene una fila por transacción
+      con métricas calculadas (margen, dias_stock) y FKs a las 4 dimensiones.
+      Materializada como incremental con estrategia merge sobre id_venta.
+
+      Regla semántica del proyecto: un coche con fecha_compra pero sin fecha_venta
+      se considera "en inventario en nuestros concesionarios — todavía no vendido",
+      NO una venta cerrada. Para "ventas reales" filtrar por fecha_venta_sk is not null.
+      Para "stock actual" filtrar por fecha_compra_sk is not null and fecha_venta_sk is null.
 
     columns:
       - name: id_venta
@@ -251,7 +259,7 @@ models:
 
       - name: fecha_compra_sk
         data_type: number
-        description: "FK a dim_fecha_compra."
+        description: "FK a dim_fecha_compra. Fecha en que el concesionario adquirió el vehículo. Si está informada pero fecha_venta_sk es NULL, el coche está en inventario — todavía no vendido."
         tests:
           - relationships:
               to: ref('dim_fecha_compra')
@@ -260,7 +268,7 @@ models:
 
       - name: fecha_venta_sk
         data_type: number
-        description: "FK a dim_fecha_venta."
+        description: "FK a dim_fecha_venta. NULL indica que la venta NO se ha cerrado todavía — el coche sigue en inventario en nuestros concesionarios. Filtrar por 'fecha_venta_sk is not null' para análisis de ventas reales."
         tests:
           - relationships:
               to: ref('dim_fecha_venta')
